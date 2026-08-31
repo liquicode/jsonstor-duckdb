@@ -46,6 +46,11 @@ module.exports = {
 	npm_publish_version: [
 
 		// Update npmjs.com with new package.
+		//
+		// ***Not part of publish_version, and it cannot succeed unattended.*** It needs an
+		// --otp=<code> this file cannot supply, and halt_on_error must stay false because
+		// `npm notice` writes to stderr on success. Publish by hand instead:
+		//     npm publish . --access public --otp=<code>
 		{
 			$Shell: {
 				command: 'npm publish . --access public',
@@ -108,7 +113,25 @@ module.exports = {
 
 		// Finalize and publish the existing version.
 		{ $RunTask: { task: 'git_publish_version' } },
-		{ $RunTask: { task: 'npm_publish_version' } },
+
+		// ***The npm publish is not run from here, and that is deliberate.***
+		//
+		// Publishing this account requires a one-time password, and devops runs a step
+		// through child_process.exec with no TTY - so npm cannot prompt for one and fails
+		// with EOTP. Worse, npm_publish_version has to carry halt_on_error: false, because
+		// `npm notice` writes to stderr on success, so that failure could not halt the task
+		// either. The run reported `Task Completed OK` having published nothing, which it
+		// did for real on 2026-08-29 while releasing jsongin 0.1.0.
+		//
+		// So the task stops at the last thing it can do honestly and hands the release over.
+		// Everything above this line is done: committed, tagged and pushed. Only the
+		// registry is left.
+		{
+			$Shell: {
+				command: 'echo Now publish v${Package.version} by hand:  npm publish . --access public --otp=YOUR_CODE',
+				out: { console: true },
+			}
+		},
 
 	],
 
