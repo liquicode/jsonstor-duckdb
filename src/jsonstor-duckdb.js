@@ -1057,6 +1057,22 @@ module.exports = {
 		//=====================================================================
 
 
+		// ***What this storage is actually talking to.*** DuckDB is in-process, so the version is
+		// the library's rather than a server's - it is set by this package's dependency and not
+		// by anything the caller deploys. It answers with a leading `v`, which the parse skips
+		// and the raw string keeps.
+		Storage.StorageInfo = async function ( Options )
+		{
+			let answer = await SQL_Passthrough( 'SELECT version() AS server_version' );
+			let row = answer.results[ 0 ] || {};
+			return jsonstor.BuildStorageInfo( Storage, {
+				Product: 'DuckDB',
+				Version: row.server_version || '',
+				InProcess: true,
+			} );
+		};
+
+
 		Storage.DropStorage = async function ( Options )
 		{
 			await SQL_Execute( `DROP TABLE IF EXISTS ${table_reference()}` );
