@@ -289,7 +289,17 @@ module.exports = {
 					}
 					let connection = await instance.connect();
 					return { instance: instance, connection: connection };
-				} )();
+				} )().catch(
+					function ( ConnectError )
+					{
+						// ***A database which did not open is not remembered.*** Without this the
+						// memo holds a rejected promise for the life of the storage, so a file
+						// which was momentarily unreadable refuses every later statement. It is
+						// the rule the dialect check below already states, applied to the
+						// connection it depends on.
+						HELD.promise = null;
+						throw ConnectError;
+					} );
 			}
 			let held = await HELD.promise;
 			return held.connection;
@@ -400,10 +410,43 @@ module.exports = {
 
 
 		//=====================================================================
+		// ***The catalog is marked known only once it has been read.***
+		//
+		// This used to set `initialized` on the way in, which made a failed read
+		// indistinguishable from an empty database: the flag stayed true, `table_exists` stayed
+		// false, and every later call served that back as a fact. A Count against a server which
+		// was not answering returned ***0*** rather than failing - the first call threw and every
+		// one after it lied, which is the worst shape an error can take here. Setting the flag on
+		// the way out is the whole fix: a read which throws leaves the catalog unknown, and the
+		// next call asks again.
+		//
+		// ***Memoized while it is in flight***, because two concurrent first calls had a quieter
+		// version of the same bug - the second saw the flag the first had just set and carried on
+		// against a catalog which had not been filled in yet.
+		let catalog_read = null;
 		async function update_catalog()
 		{
 			if ( Storage.Catalog.initialized ) { return Storage.Catalog; }
-			Storage.Catalog.initialized = true;
+			if ( catalog_read === null )
+			{
+				catalog_read = read_catalog().then(
+					function ( Catalog )
+					{
+						Storage.Catalog.initialized = true;
+						catalog_read = null;
+						return Catalog;
+					},
+					function ( ReadError )
+					{
+						catalog_read = null;
+						throw ReadError;
+					} );
+			}
+			return await catalog_read;
+		}
+
+		async function read_catalog()
+		{
 			Storage.Catalog.table_exists = false;
 			Storage.Catalog.fields = {};
 			Storage.Catalog.id_field = Storage.Settings.IdField;
