@@ -9,11 +9,11 @@ Every test in this family lives in [`@liquicode/jsonstor-docs`](https://github.c
 
 ## Engine Tests
 
-| Engine                    |            A |           B |           C |            D |          E |         F |           M |            N |          Z |             Total |
-|---------------------------|-------------:|------------:|------------:|-------------:|-----------:|----------:|------------:|-------------:|-----------:|------------------:|
-| jsonstor-duckdb           | 10/0 (1.76s) | 27/0 (51ms) | 7/0 (376ms) |  14/0 (96ms) | 6/0 (80ms) | 3/0 (3ms) | 26/0 (24ms) | 39/0 (275ms) | 2/0 (52ms) | **134/0** (2.72s) |
-| jsonstor-duckdb (columns) | 10/0 (2.10s) | 27/0 (69ms) | 7/0 (475ms) | 14/0 (123ms) | 6/0 (90ms) | 3/0 (4ms) | 26/0 (30ms) | 39/0 (346ms) | 2/0 (70ms) | **134/0** (3.31s) |
-| **total**                 |     **20/0** |    **54/0** |    **14/0** |     **28/0** |   **12/0** |   **6/0** |    **52/0** |     **78/0** |    **4/0** | **268/0** (6.03s) |
+| Engine                    |            A |           B |           C |            D |          E |         F |         G |           M |            N |          Z |             Total |
+|---------------------------|-------------:|------------:|------------:|-------------:|-----------:|----------:|----------:|------------:|-------------:|-----------:|------------------:|
+| jsonstor-duckdb           | 10/0 (2.01s) | 27/0 (68ms) | 7/0 (405ms) | 14/0 (117ms) | 6/0 (76ms) | 3/0 (4ms) | 6/0 (0ms) | 26/0 (27ms) | 39/0 (266ms) | 2/0 (62ms) | **140/0** (3.04s) |
+| jsonstor-duckdb (columns) | 10/0 (2.24s) | 27/0 (72ms) | 7/0 (544ms) | 14/0 (122ms) | 6/0 (86ms) | 3/0 (4ms) | 6/0 (0ms) | 26/0 (32ms) | 39/0 (336ms) | 2/0 (78ms) | **140/0** (3.52s) |
+| **total**                 |     **20/0** |    **54/0** |    **14/0** |     **28/0** |   **12/0** |   **6/0** |  **12/0** |    **52/0** |     **78/0** |    **4/0** | **280/0** (6.56s) |
 
 Each cell is ***passing/failing (duration)***.
 
@@ -25,6 +25,7 @@ Each cell is ***passing/failing (duration)***.
 | D      | Engine Contract Tests      |
 | E      | Extension Operator Tests   |
 | F      | Pushdown Tests             |
+| G      | Mango Acceptance Tests     |
 | M      | MongoDB Tutorial           |
 | N      | MongoDB Reference          |
 | Z      | Ad-Hoc Tests               |
@@ -33,7 +34,7 @@ Each cell is ***passing/failing (duration)***.
 
 | Engine          |           P |           Q |         R |                    S |          T |                       Total |
 |-----------------|------------:|------------:|----------:|---------------------:|-----------:|----------------------------:|
-| jsonstor-duckdb | 23/0 (20ms) | 20/0 (11ms) | 2/0 (0ms) | 9/0 +2 skipped (4ms) | 17 skipped | **54/0** +19 skipped (35ms) |
+| jsonstor-duckdb | 23/0 (26ms) | 20/0 (11ms) | 2/0 (0ms) | 9/0 +2 skipped (4ms) | 17 skipped | **54/0** +19 skipped (41ms) |
 
 | Column | Category              |
 |--------|-----------------------|
