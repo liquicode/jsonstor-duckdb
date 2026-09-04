@@ -35,8 +35,10 @@ declare module '@liquicode/jsonstor-duckdb'
 		Schema?: string;
 		/** The name of the table to use. */
 		Table: string;
-		/** The column to treat as the document identifier. Empty means none. Defaults to `""`. */
-		IdField?: string;
+		/** The column to treat as the document identifier. Empty discovers it from the table: a column named `_id`, then an auto-increment key. `IdField` is the former spelling and still works. Defaults to `""`. */
+		PrimaryKey?: string;
+		/** Allow an update or a replacement to change the identifier. Off by default, so an operation which would move it is refused by name rather than silently discarded. Defaults to `false`. */
+		PrimaryKeyMutable?: boolean;
 		/** Allow the adapter to create the schema, the sequence, the table, and the columns it is told to create. It never adds a column because a document had a field. Defaults to `false`. */
 		ModifySchema?: boolean;
 		/** The column which stores the document as JSON text. Empty means none, and then every field must already be a column. Created when missing if `ModifySchema` is `true`. Defaults to `""`. */

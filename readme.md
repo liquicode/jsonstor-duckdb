@@ -39,7 +39,8 @@ let storage = jsonstor.GetStorage( 'jsonstor-duckdb', {
 	Database: '...',
 	Schema: "main",
 	Table: '...',
-	IdField: "",
+	PrimaryKey: "",
+	PrimaryKeyMutable: false,
 	ModifySchema: false,
 	PayloadColumn: "",
 	PayloadSync: false,
@@ -55,7 +56,8 @@ Settings
 | `Database` | ***Yes*** | - | The database to open: a file path, or `":memory:"` for one which lives only as long as the storage. |
 | `Schema` | No | `"main"` | The schema holding the table. Every statement names it, so the connection's search path does not decide which table is used. |
 | `Table` | ***Yes*** | - | The name of the table to use. |
-| `IdField` | No | `""` | The column to treat as the document identifier. Empty means none. |
+| `PrimaryKey` | No | `""` | The column to treat as the document identifier. Empty discovers it from the table: a column named `_id`, then an auto-increment key. `IdField` is the former spelling and still works. |
+| `PrimaryKeyMutable` | No | `false` | Allow an update or a replacement to change the identifier. Off by default, so an operation which would move it is refused by name rather than silently discarded. |
 | `ModifySchema` | No | `false` | Allow the adapter to create the schema, the sequence, the table, and the columns it is told to create. It never adds a column because a document had a field. |
 | `PayloadColumn` | No | `""` | The column which stores the document as JSON text. Empty means none, and then every field must already be a column. Created when missing if `ModifySchema` is `true`. |
 | `PayloadSync` | No | `false` | Store the whole document in the payload, making the other columns an index over it. When `false` the payload holds only the fields which have no column. |
