@@ -37,13 +37,13 @@ declare module '@liquicode/jsonstor-duckdb'
 		Table: string;
 		/** The column to treat as the document identifier. Empty discovers it from the table: a column named `_id`, then an auto-increment key. `IdField` is the former spelling and still works. Defaults to `""`. */
 		PrimaryKey?: string;
-		/** Allow an update or a replacement to change the identifier. Off by default, so an operation which would move it is refused by name rather than silently discarded. Defaults to `false`. */
+		/** Allow an update or replacement to change the identifier. When `false`, such an operation is refused. Defaults to `false`. */
 		PrimaryKeyMutable?: boolean;
 		/** Allow the adapter to create the schema, the sequence, the table, and the columns it is told to create. It never adds a column because a document had a field. Defaults to `false`. */
 		ModifySchema?: boolean;
-		/** The column which stores the document as JSON text. Empty means none, and then every field must already be a column. Created when missing if `ModifySchema` is `true`. Defaults to `""`. */
+		/** The column which stores the document as JSON text. Empty means none, and every field must have a column. Created if missing when `ModifySchema` is `true`. Defaults to `""`. */
 		PayloadColumn?: string;
-		/** Store the whole document in the payload, making the other columns an index over it. When `false` the payload holds only the fields which have no column. Defaults to `false`. */
+		/** Store the whole document in the payload, and copy fields into their columns for filtering. When `false`, the payload holds only fields without a column. Defaults to `false`. */
 		PayloadSync?: boolean;
 		/** Columns to create, as `{ Name, Type, Key }`. Used only when this adapter creates the table; afterwards the table itself is the authority. Defaults to `[]`. */
 		Columns?: ColumnDefinition[];
